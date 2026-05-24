@@ -1,0 +1,49 @@
+{
+  "name": "@love-rox/ptpt-astro",
+  "version": "0.1.0",
+  "description": "Astro integration and components for ptpt split-flap displays.",
+  "keywords": [
+    "astro",
+    "integration",
+    "patapata",
+    "split-flap"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Love-Rox/ptpt.git",
+    "directory": "packages/ptpt-astro"
+  },
+  "files": [
+    "dist",
+    "components",
+    "README.md"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./Patapata.astro": "./components/Patapata.astro",
+    "./PatapataBoard.astro": "./components/PatapataBoard.astro"
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@love-rox/ptpt-rehype": "workspace:*"
+  },
+  "devDependencies": {
+    "@love-rox/ptpt-core": "workspace:*",
+    "@love-rox/ptpt-rehype": "workspace:*",
+    "astro": "^5.15.0"
+  },
+  "peerDependencies": {
+    "@love-rox/ptpt-core": "workspace:*",
+    "astro": ">=4"
+  }
+}

@@ -1,0 +1,31 @@
+---
+interface Props {
+  /** Text to display; newlines split into board rows. */
+  targets: string
+  /** Preset name (resolved by the hydrator). */
+  preset?: string
+  /** Milliseconds per flap. */
+  durationPerFlap?: number
+  /** Flip direction. */
+  direction?: 'forward' | 'shortest'
+  class?: string
+}
+
+const { targets, preset, durationPerFlap, direction, class: className } = Astro.props
+const lines = targets.split('\n')
+---
+
+<div class:list={['ptpt-block', className]}>
+  {
+    lines.map((line) => (
+      <div
+        class="ptpt"
+        data-ptpt-targets={line}
+        data-ptpt-preset={preset}
+        data-ptpt-duration={durationPerFlap}
+        data-ptpt-direction={direction}>
+        {line}
+      </div>
+    ))
+  }
+</div>

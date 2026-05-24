@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "paths": {
+      "@love-rox/ptpt-rehype": ["../ptpt-rehype/src/index.ts"]
+    }
+  },
+  "include": ["src", "tests"]
+}
