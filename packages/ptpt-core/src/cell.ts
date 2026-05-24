@@ -64,7 +64,10 @@ type Waiter = { resolve: () => void; reject: (error: Error) => void }
 type Segment = { slug: string; waiters: Waiter[] }
 type ActiveFlip = { timers: ReturnType<typeof setTimeout>[]; settle: () => void }
 
-const isDev = typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production'
+// Read NODE_ENV without depending on Node type definitions (this is a
+// browser-first, zero-dependency package).
+const proc = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process
+const isDev = proc !== undefined && proc.env?.NODE_ENV !== 'production'
 
 function resolveFrames(options: CellOptions): Frame[] {
   if (options.frames && options.preset) {

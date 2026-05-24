@@ -1,7 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
+    "noEmit": true,
+    "declaration": false,
+    "rootDir": "..",
     "jsx": "react-jsx",
     "paths": {
       "@love-rox/ptpt-core": ["../ptpt-core/src/index.ts"]

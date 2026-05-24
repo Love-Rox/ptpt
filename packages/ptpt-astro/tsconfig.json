@@ -1,7 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
+    "noEmit": true,
+    "declaration": false,
+    "rootDir": "..",
     "paths": {
       "@love-rox/ptpt-rehype": ["../ptpt-rehype/src/index.ts"]
     }
