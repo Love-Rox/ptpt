@@ -147,7 +147,7 @@ import { presets } from '@love-rox/ptpt-core/presets'
 {
   name: 'default',
   chars: " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,:;'\"-+/?!&@#$%*",
-  description: 'Solari di Udine 系の英数字 + 記号プリセット。全63フラップ。',
+  description: 'Solari di Udine 系の英数字 + 記号プリセット。全54フラップ。',
   recommendedDuration: 200,
 }
 ```

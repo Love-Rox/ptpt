@@ -390,6 +390,10 @@ export type Cell = {
   destroy(): void
   readonly current: string
   readonly element: HTMLElement
+  // Extensions consumed by Board (added during implementation):
+  readonly currentFrame: Frame
+  frameFor(slug: string): Frame
+  readonly reducedMotion: ReducedMotion
 }
 export function createCell(element: HTMLElement, options?: CellOptions): Cell
 
@@ -436,7 +440,7 @@ export type PresetDefinition = {
 export const defaultPreset: PresetDefinition = {
   name: 'default',
   chars: " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,:;'\"-+/?!&@#$%*",
-  description: 'Solari di Udine 系の英数字 + 記号プリセット。全63フラップ。',
+  description: 'Solari di Udine 系の英数字 + 記号プリセット。全54フラップ。',
   recommendedDuration: 200,
 }
 ```

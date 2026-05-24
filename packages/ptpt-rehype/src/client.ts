@@ -44,7 +44,10 @@ export function hydrate(root: ParentNode = document, options: HydrateOptions = {
     const direction = container.getAttribute('data-ptpt-direction')
 
     const cellOptions: CellOptions = {}
-    if (presetName && presetMap[presetName]) cellOptions.preset = presetMap[presetName]
+    if (presetName && Object.hasOwn(presetMap, presetName)) {
+      const preset = presetMap[presetName]
+      if (preset) cellOptions.preset = preset
+    }
     if (durationAttr) {
       const duration = Number(durationAttr)
       if (!Number.isNaN(duration)) cellOptions.durationPerFlap = duration
