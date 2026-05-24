@@ -1,0 +1,43 @@
+{
+  "name": "@love-rox/ptpt-vue",
+  "version": "0.1.0",
+  "description": "Vue wrapper for ptpt, the split-flap display library.",
+  "keywords": [
+    "flipboard",
+    "patapata",
+    "split-flap",
+    "vue"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Love-Rox/ptpt.git",
+    "directory": "packages/ptpt-vue"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@love-rox/ptpt-core": "workspace:*",
+    "@vue/test-utils": "^2.4.6",
+    "vue": "^3.5.22"
+  },
+  "peerDependencies": {
+    "@love-rox/ptpt-core": "workspace:*",
+    "vue": ">=3.4"
+  }
+}
