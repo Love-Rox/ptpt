@@ -1,0 +1,127 @@
+/**
+ * Default ptpt stylesheet (optional).
+ *
+ * Import `@love-rox/ptpt-core/styles.css` for a working split-flap look out of
+ * the box. Everything is themeable through the custom properties below; for a
+ * fully headless setup, skip this file and target the `.ptpt-*` classes
+ * yourself.
+ */
+
+.ptpt-cell {
+  /* Geometry */
+  --ptpt-width: 80px;
+  --ptpt-height: 120px;
+  --ptpt-gap: 1px;
+  /* Animation */
+  --ptpt-flip-duration: 200ms;
+  /* Theme */
+  --ptpt-bg: #000;
+  --ptpt-flap-bg: #2a2a2a;
+  --ptpt-color: #f0e8d0;
+  --ptpt-font-family: 'Courier New', monospace;
+  --ptpt-font-size: calc(var(--ptpt-height) * 0.72);
+
+  position: relative;
+  width: var(--ptpt-width);
+  height: var(--ptpt-height);
+  background: var(--ptpt-bg);
+  perspective: 400px;
+}
+
+.ptpt-half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  background: var(--ptpt-flap-bg);
+}
+
+/* Upper area has two layers:
+   - ptpt-top-preview (z 1): the next glyph's top half, waiting behind
+   - ptpt-top         (z 2): the current glyph's top half, which flips down */
+.ptpt-top-preview {
+  top: 0;
+  z-index: 1;
+  border-bottom: var(--ptpt-gap) solid var(--ptpt-bg);
+}
+
+.ptpt-top {
+  top: 0;
+  z-index: 2;
+  transform-origin: bottom;
+  backface-visibility: hidden;
+  border-bottom: var(--ptpt-gap) solid var(--ptpt-bg);
+}
+
+.ptpt-bottom {
+  bottom: 0;
+  z-index: 1;
+  border-top: var(--ptpt-gap) solid var(--ptpt-bg);
+}
+
+.glyph {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--ptpt-height);
+  line-height: var(--ptpt-height);
+  font-family: var(--ptpt-font-family);
+  font-size: var(--ptpt-font-size);
+  font-weight: bold;
+  color: var(--ptpt-color);
+  text-align: center;
+}
+
+.ptpt-top .glyph,
+.ptpt-top-preview .glyph {
+  top: 0;
+}
+
+.ptpt-bottom .glyph {
+  bottom: 0;
+}
+
+/* Image frames: crop the top / bottom half with object-position. */
+.ptpt-half .glyph img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ptpt-top .glyph img,
+.ptpt-top-preview .glyph img {
+  object-position: top;
+}
+
+.ptpt-bottom .glyph img {
+  object-position: bottom;
+}
+
+/* The flip: the current top half rotates down. The box-shadow grows to its
+   peak mid-flip so the flap appears to fall onto the bottom half. */
+.ptpt-cell.flipping .ptpt-top {
+  animation: ptpt-flip var(--ptpt-flip-duration, 200ms) ease-in forwards;
+}
+
+@keyframes ptpt-flip {
+  0% {
+    transform: rotateX(0deg);
+    box-shadow: 0 0 0 transparent;
+  }
+  50% {
+    transform: rotateX(-50deg);
+    box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.6);
+  }
+  100% {
+    transform: rotateX(-90deg);
+    box-shadow: 0 0 0 transparent;
+  }
+}
+
+/* Respect reduced-motion at the CSS layer too (the JS honors it as well). */
+@media (prefers-reduced-motion: reduce) {
+  .ptpt-cell.flipping .ptpt-top {
+    animation-duration: 1ms;
+  }
+}
