@@ -1,6 +1,17 @@
+import { copyFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import dts from 'vite-plugin-dts'
+
+/** Ship the default stylesheet verbatim (library mode emits no standalone CSS). */
+function copyStyles(): Plugin {
+  return {
+    name: 'ptpt-copy-styles',
+    closeBundle() {
+      copyFileSync(resolve(__dirname, 'src/styles.css'), resolve(__dirname, 'dist/styles.css'))
+    },
+  }
+}
 
 export default defineConfig({
   plugins: [
@@ -9,6 +20,7 @@ export default defineConfig({
       rollupTypes: false,
       entryRoot: 'src',
     }),
+    copyStyles(),
   ],
   build: {
     lib: {
