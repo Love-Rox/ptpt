@@ -1,0 +1,51 @@
+{
+  "name": "@love-rox/ptpt-rehype",
+  "version": "0.1.0",
+  "description": "rehype plugin and client hydrator for ptpt split-flap displays in Markdown/HTML.",
+  "keywords": [
+    "hast",
+    "markdown",
+    "patapata",
+    "rehype",
+    "split-flap"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Love-Rox/ptpt.git",
+    "directory": "packages/ptpt-rehype"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hastscript": "^9.0.1",
+    "unist-util-visit": "^5.0.0"
+  },
+  "devDependencies": {
+    "@love-rox/ptpt-core": "workspace:*",
+    "@types/hast": "^3.0.4",
+    "rehype": "^13.0.2"
+  },
+  "peerDependencies": {
+    "@love-rox/ptpt-core": "workspace:*"
+  }
+}
