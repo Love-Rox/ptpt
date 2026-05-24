@@ -1,0 +1,46 @@
+{
+  "name": "@love-rox/ptpt-react",
+  "version": "0.1.0",
+  "description": "React wrapper for ptpt, the split-flap display library.",
+  "keywords": [
+    "flipboard",
+    "patapata",
+    "react",
+    "split-flap"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Love-Rox/ptpt.git",
+    "directory": "packages/ptpt-react"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@love-rox/ptpt-core": "workspace:*",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "peerDependencies": {
+    "@love-rox/ptpt-core": "workspace:*",
+    "react": ">=18"
+  }
+}
