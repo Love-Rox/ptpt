@@ -32,7 +32,8 @@ export type Board = {
   readonly element: HTMLElement
 }
 
-const defaultFormatter = (frames: Frame[]): string => frames.map(frameText).join(' ')
+const defaultFormatter = (frames: Frame[]): string =>
+  frames.map(frameText).join(' ').replace(/\s+/g, ' ').trim()
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -85,7 +86,7 @@ export function createBoard(cells: Cell[], options: BoardOptions = {}): Board {
   const formatter = options.ariaLabelFormatter ?? defaultFormatter
 
   let destroyed = false
-  let flipToken = 0
+  let pendingFlips = 0
 
   // a11y scaffolding
   element.classList.add('ptpt-board')
@@ -112,15 +113,26 @@ export function createBoard(cells: Cell[], options: BoardOptions = {}): Board {
   ): Promise<void> {
     if (destroyed) throw new Error('ptpt: board is destroyed')
     const targets = typeof slugs === 'string' ? [...slugs] : slugs
-    const reduced = prefersReducedMotion()
+
+    // Validate every target up front so an unknown slug rejects cleanly,
+    // before any aria mutation or partial flip. (frameFor throws if unknown.)
+    targets.forEach((slug, index) => {
+      if (slug != null) cellList[index]?.frameFor(slug)
+    })
+
+    // "reduced" means the whole board jumps instantly: the OS prefers reduced
+    // motion AND every cell degrades to instant. If any cell still animates
+    // (reducedMotion 'minimal'/'ignore'), take the normal busy/announce path.
+    const reduced =
+      prefersReducedMotion() && cellList.every((cell) => cell.reducedMotion === 'instant')
 
     if (reduced) {
-      // Degraded motion: announce immediately, never toggle aria-busy.
       setAriaLabel(predictedFrames(targets))
     } else {
       if (announceTiming === 'immediate' || announceTiming === 'both') {
         setAriaLabel(predictedFrames(targets))
       }
+      pendingFlips += 1
       setBusy(true)
     }
 
@@ -137,15 +149,17 @@ export function createBoard(cells: Cell[], options: BoardOptions = {}): Board {
       )
     })
 
-    const token = ++flipToken
     try {
       await Promise.all(flips)
     } finally {
-      // Only the most recent flip settles the board (latest-target wins).
-      if (token === flipToken && !destroyed && !reduced) {
-        setBusy(false)
-        if (announceTiming === 'after' || announceTiming === 'both') {
-          setAriaLabel(finalFrames())
+      if (!reduced) {
+        pendingFlips -= 1
+        // Settle only once every overlapping flip (across calls) has finished.
+        if (pendingFlips === 0 && !destroyed) {
+          setBusy(false)
+          if (announceTiming === 'after' || announceTiming === 'both') {
+            setAriaLabel(finalFrames())
+          }
         }
       }
     }

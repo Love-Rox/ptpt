@@ -182,4 +182,67 @@ describe('board.destroy', () => {
     expect(cells[0]?.element.getAttribute('aria-hidden')).toBeNull()
     expect(() => cells[0]?.flipTo('B')).toThrow(/destroyed/)
   })
+
+  it('rejects in-flight flips when destroyed', async () => {
+    const container = document.createElement('div')
+    const cells = [0, 1].map(() => {
+      const el = document.createElement('div')
+      container.appendChild(el)
+      return createCell(el, { preset: 'ABCDE', durationPerFlap: 50 })
+    })
+    const board = createBoard(cells)
+    const pending = board.flipTo('EE')
+    board.destroy()
+    await expect(pending).rejects.toThrow(/destroyed/)
+  })
+})
+
+describe('board — robustness', () => {
+  it('rejects an unknown slug without starting a flip or sticking aria-busy', async () => {
+    const { container, cells } = makeBoard(3)
+    const board = createBoard(cells)
+    await expect(board.flipTo(['A', 'Z', 'B'])).rejects.toThrow(/unknown/)
+    expect(container.getAttribute('aria-busy')).toBe('false')
+    expect(cells.map((c) => c.current)).toEqual(['A', 'A', 'A'])
+  })
+
+  it('keeps aria-busy until every overlapping flip settles', async () => {
+    const { container, cells } = makeBoard(3)
+    const board = createBoard(cells)
+    const slow = board.flipTo('EEE') // all three cells, several flaps
+    const fast = board.flipTo(['B', null, null]) // only cell 0
+    await fast
+    // cells 1 and 2 are still animating toward E
+    expect(container.getAttribute('aria-busy')).toBe('true')
+    await slow
+    expect(container.getAttribute('aria-busy')).toBe('false')
+  })
+
+  it('toggles aria-busy when a cell ignores reduced motion', async () => {
+    mockReducedMotion(true)
+    const container = document.createElement('div')
+    const cells = [0, 1].map(() => {
+      const el = document.createElement('div')
+      container.appendChild(el)
+      return createCell(el, { preset: 'ABCDE', durationPerFlap: 4, reducedMotion: 'ignore' })
+    })
+    const board = createBoard(cells)
+    const pending = board.flipTo('CC')
+    expect(container.getAttribute('aria-busy')).toBe('true')
+    await pending
+    expect(container.getAttribute('aria-busy')).toBe('false')
+    expect(cells.map((c) => c.current)).toEqual(['C', 'C'])
+  })
+
+  it('collapses blank flaps in the default aria-label', () => {
+    const container = document.createElement('div')
+    const cells = [0, 1, 2].map(() => {
+      const el = document.createElement('div')
+      container.appendChild(el)
+      return createCell(el) // default preset → starts on the blank flap
+    })
+    createBoard(cells)
+    // three blank cells would naively join to '   '; collapsed + trimmed → ''
+    expect(container.getAttribute('aria-label')).toBe('')
+  })
 })

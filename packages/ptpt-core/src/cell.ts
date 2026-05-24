@@ -56,6 +56,8 @@ export type Cell = {
    * @throws If `slug` is not in this cell's frame set.
    */
   frameFor(slug: string): Frame
+  /** The reduced-motion strategy this cell was created with. */
+  readonly reducedMotion: ReducedMotion
   /** The host element passed to {@link createCell}. */
   readonly element: HTMLElement
 }
@@ -114,6 +116,14 @@ export function createCell(element: HTMLElement, options: CellOptions = {}): Cel
   const duration = Math.max(0, resolveDuration(options))
   const direction: FlipDirection = options.direction ?? 'forward'
   const reducedMotion: ReducedMotion = options.reducedMotion ?? 'instant'
+
+  if (isDev) {
+    for (const frame of frames) {
+      if (frame.type === 'image' && frame.alt === undefined) {
+        console.warn(`ptpt: image frame "${frame.slug}" has no alt; falling back to slug`)
+      }
+    }
+  }
 
   // --- DOM ---
   element.classList.add('ptpt-cell')
@@ -252,6 +262,7 @@ export function createCell(element: HTMLElement, options: CellOptions = {}): Cel
     flipTo,
     destroy,
     frameFor: frameBySlug,
+    reducedMotion,
     get current() {
       return currentSlug
     },
@@ -287,9 +298,6 @@ function renderGlyph(glyph: HTMLElement, frame: Frame): void {
     img.alt = frame.alt ?? frame.slug
     if (frame.width !== undefined) img.width = frame.width
     if (frame.height !== undefined) img.height = frame.height
-    if (isDev && frame.alt === undefined) {
-      console.warn(`ptpt: image frame "${frame.slug}" has no alt; falling back to slug`)
-    }
     glyph.appendChild(img)
     return
   }
