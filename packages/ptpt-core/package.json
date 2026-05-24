@@ -1,0 +1,55 @@
+{
+  "name": "@love-rox/ptpt-core",
+  "version": "0.1.0",
+  "description": "Split-flap display library for the web. Framework-agnostic core.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./presets": {
+      "types": "./dist/presets/index.d.ts",
+      "import": "./dist/presets/index.js"
+    },
+    "./presets/*": {
+      "types": "./dist/presets/*.d.ts",
+      "import": "./dist/presets/*.js"
+    },
+    "./delays": {
+      "types": "./dist/delays/index.d.ts",
+      "import": "./dist/delays/index.js"
+    },
+    "./delays/*": {
+      "types": "./dist/delays/*.d.ts",
+      "import": "./dist/delays/*.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "split-flap",
+    "flipboard",
+    "patapata",
+    "solari",
+    "vestaboard"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Love-Rox/ptpt.git",
+    "directory": "packages/ptpt-core"
+  }
+}

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ptpt — Prototype v6 (3-element)</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a1a; color: #ddd; padding: 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 32px;
+      min-height: 100vh; margin: 0; box-sizing: border-box;
+    }
+    h1 { font-weight: 300; letter-spacing: 0.1em; margin: 0; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 600px; align-items: center; }
+    button {
+      padding: 8px 16px; background: #333; color: #ddd;
+      border: 1px solid #555; cursor: pointer;
+      font-family: monospace; font-size: 14px;
+    }
+    button:hover { background: #444; }
+    .info {
+      font-family: monospace; font-size: 12px; color: #888;
+      max-width: 600px; text-align: center; line-height: 1.6;
+    }
+    .debug {
+      font-family: monospace; font-size: 11px; color: #666;
+      padding: 8px 12px; background: #222; border-left: 3px solid #555; max-width: 600px;
+    }
+
+    /* ===== ptpt 3要素方式 v6 ===== */
+
+    .ptpt-board { display: flex; gap: 4px; }
+
+    .ptpt-cell {
+      --cell-w: 80px;
+      --cell-h: 120px;
+      width: var(--cell-w);
+      height: var(--cell-h);
+      background: #000;
+      position: relative;
+      perspective: 400px;
+    }
+
+    .ptpt-half {
+      position: absolute;
+      left: 0; right: 0;
+      height: 50%;
+      overflow: hidden;
+      background: #2a2a2a;
+    }
+
+    /* 上半分の領域に2層
+       z-index: 1 = 背景の「次の文字の上半分」(プレビュー)
+       z-index: 2 = 手前の「現在の文字の上半分」(これが倒れる) */
+    .ptpt-top-preview {
+      top: 0;
+      border-bottom: 1px solid #000;
+      z-index: 1;
+    }
+    .ptpt-top {
+      top: 0;
+      border-bottom: 1px solid #000;
+      transform-origin: bottom;
+      backface-visibility: hidden;
+      z-index: 2;
+    }
+
+    .ptpt-bottom {
+      bottom: 0;
+      border-top: 1px solid #000;
+      z-index: 1;
+    }
+
+    .glyph {
+      position: absolute;
+      left: 0; right: 0;
+      height: var(--cell-h);
+      font-family: 'Courier New', monospace;
+      font-size: 90px;
+      font-weight: bold;
+      color: #f0e8d0;
+      line-height: var(--cell-h);
+      text-align: center;
+    }
+    .ptpt-top .glyph,
+    .ptpt-top-preview .glyph { top: 0; }
+    .ptpt-bottom .glyph { bottom: 0; }
+
+    /* フリップ: ptpt-top が倒れる。box-shadow で「下に被さる重み」を表現 */
+    .ptpt-top {
+      box-shadow: 0 0 0 transparent;
+      transition: box-shadow var(--ptpt-flip-ms, 200ms);
+    }
+    .ptpt-cell.flipping .ptpt-top {
+      animation: ptpt-flip var(--ptpt-flip-ms, 200ms) ease-in forwards;
+    }
+    @keyframes ptpt-flip {
+      0%   {
+        transform: rotateX(0deg);
+        box-shadow: 0 0 0 transparent;
+      }
+      50%  {
+        transform: rotateX(-50deg);
+        /* 倒れている途中、下に向かって影が伸びる */
+        box-shadow: 0 20px 30px -5px rgba(0,0,0,0.6);
+      }
+      100% {
+        transform: rotateX(-90deg);
+        box-shadow: 0 0 0 transparent;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>ptpt — Prototype v6 (3-element)</h1>
+  <div class="ptpt-board" id="board"></div>
+  <div class="controls">
+    <button data-target="HELLO">HELLO</button>
+    <button data-target="WORLD">WORLD</button>
+    <button data-target="PTPT ">PTPT_</button>
+    <button data-target="ABCDE">ABCDE</button>
+    <button data-target="12345">12345</button>
+    <button data-target="     ">CLEAR</button>
+    <button id="rapid">連打テスト (replace)</button>
+  </div>
+  <div class="controls">
+    <label style="font-family: monospace; font-size: 12px;">
+      フリップ速度:
+      <input type="range" id="speed-slider" min="20" max="600" value="200" step="10">
+      <span id="speed-value">200ms</span>
+    </label>
+  </div>
+  <div class="debug" id="debug">起動中…</div>
+  <div class="info">
+    3要素方式 v6。上半分が倒れている向こう側に、次の文字の上半分が常に控えている。<br>
+    物理パタパタに最も近い見え方。
+  </div>
+
+  <script>
+    'use strict'
+    const PRESET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,:;'\"-+/?!&@#$%*"
+    let FLIP_MS = 200
+
+    function applySpeed(ms) {
+      FLIP_MS = ms
+      document.documentElement.style.setProperty('--ptpt-flip-ms', ms + 'ms')
+    }
+
+    class Cell {
+      constructor(el) {
+        this.el = el
+        this.current = ' '
+        this.pendingTarget = null
+        this.running = false
+        this._build()
+        this._renderAll(' ')
+      }
+
+      _build() {
+        this.el.classList.add('ptpt-cell')
+        this.el.innerHTML = `
+          <div class="ptpt-half ptpt-top-preview"><div class="glyph"></div></div>
+          <div class="ptpt-half ptpt-top"><div class="glyph"></div></div>
+          <div class="ptpt-half ptpt-bottom"><div class="glyph"></div></div>
+        `
+        this.topGlyph     = this.el.querySelector('.ptpt-top > .glyph')
+        this.previewGlyph = this.el.querySelector('.ptpt-top-preview > .glyph')
+        this.bottomGlyph  = this.el.querySelector('.ptpt-bottom > .glyph')
+      }
+
+      _renderAll(ch) {
+        this.topGlyph.textContent = ch
+        this.previewGlyph.textContent = ch
+        this.bottomGlyph.textContent = ch
+      }
+
+      async flipTo(target) {
+        if (!PRESET.includes(target)) return
+        this.pendingTarget = target
+        if (this.running) return
+        this.running = true
+        try {
+          while (this.pendingTarget !== null && this.pendingTarget !== this.current) {
+            const goal = this.pendingTarget
+            const path = this._path(this.current, goal)
+            for (const next of path) {
+              if (this.pendingTarget !== goal) break
+              await this._flipOnce(next)
+            }
+          }
+          this.pendingTarget = null
+        } finally {
+          this.running = false
+        }
+      }
+
+      _path(from, to) {
+        const fromIdx = PRESET.indexOf(from)
+        const toIdx = PRESET.indexOf(to)
+        const out = []
+        let i = fromIdx
+        while (i !== toIdx) {
+          i = (i + 1) % PRESET.length
+          out.push(PRESET[i])
+        }
+        return out
+      }
+
+      _flipOnce(next) {
+        return new Promise(resolve => {
+          // 準備: preview に「次」を仕込む
+          this.previewGlyph.textContent = next
+          this.el.offsetHeight
+          this.el.classList.add('flipping')
+
+          // 下半分の切り替えはシャドウのピーク(50%地点) =「フラップが下に被さる瞬間」
+          setTimeout(() => {
+            this.bottomGlyph.textContent = next
+          }, FLIP_MS / 2)
+
+          setTimeout(() => {
+            this.topGlyph.textContent = next
+            this.el.classList.remove('flipping')
+            this.current = next
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+          }, FLIP_MS)
+        })
+      }
+    }
+
+    const boardEl = document.getElementById('board')
+    const debugEl = document.getElementById('debug')
+    const cells = []
+    for (let i = 0; i < 5; i++) {
+      const el = document.createElement('div')
+      boardEl.appendChild(el)
+      cells.push(new Cell(el))
+    }
+
+    function flipBoard(str) {
+      const target = str.padEnd(5, ' ').slice(0, 5)
+      cells.forEach((cell, i) => cell.flipTo(target[i]))
+      debugEl.textContent = '目標: "' + target + '"'
+    }
+
+    document.querySelectorAll('button[data-target]').forEach(btn => {
+      btn.addEventListener('click', () => flipBoard(btn.dataset.target))
+    })
+
+    document.getElementById('rapid').addEventListener('click', () => {
+      const targets = ['HELLO', 'WORLD', 'PTPT ', 'A    ', '12345', 'ABCDE']
+      let i = 0
+      const id = setInterval(() => {
+        if (i >= targets.length) { clearInterval(id); return }
+        flipBoard(targets[i++])
+      }, 300)
+    })
+
+    const speedSlider = document.getElementById('speed-slider')
+    const speedValue = document.getElementById('speed-value')
+    speedSlider.addEventListener('input', e => {
+      const ms = parseInt(e.target.value, 10)
+      applySpeed(ms)
+      speedValue.textContent = ms + 'ms'
+    })
+
+    applySpeed(200)
+    flipBoard('PTPT ')
+  </script>
+</body>
+</html>
