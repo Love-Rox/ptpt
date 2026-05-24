@@ -9,8 +9,8 @@
 
 .ptpt-cell {
   /* Geometry */
-  --ptpt-width: 80px;
-  --ptpt-height: 120px;
+  --ptpt-width: 48px;
+  --ptpt-height: 72px;
   --ptpt-gap: 1px;
   /* Animation */
   --ptpt-flip-duration: 200ms;

@@ -319,8 +319,8 @@ computeFlipPath(frames, fromIndex, toIndex, { direction }): number[]
 
 ```css
 .ptpt-cell {
-  width: var(--ptpt-width, 80px);
-  height: var(--ptpt-height, 120px);
+  width: var(--ptpt-width, 48px);
+  height: var(--ptpt-height, 72px);
   position: relative;
   perspective: 400px;
 }
@@ -383,8 +383,8 @@ CSS カスタムプロパティで制御。コアはハードコードしない:
 
 ```css
 .ptpt-cell {
-  --ptpt-width: 80px;
-  --ptpt-height: 120px;
+  --ptpt-width: 48px;
+  --ptpt-height: 72px;
   --ptpt-flip-duration: 200ms;
 }
 ```
