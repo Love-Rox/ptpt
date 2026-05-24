@@ -2,8 +2,27 @@
   "name": "@love-rox/ptpt-core",
   "version": "0.1.0",
   "description": "Split-flap display library for the web. Framework-agnostic core.",
+  "keywords": [
+    "flipboard",
+    "patapata",
+    "solari",
+    "split-flap",
+    "vestaboard"
+  ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Love-Rox/ptpt.git",
+    "directory": "packages/ptpt-core"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -27,29 +46,10 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "sideEffects": [
-    "**/*.css"
-  ],
   "scripts": {
     "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
-  },
-  "keywords": [
-    "split-flap",
-    "flipboard",
-    "patapata",
-    "solari",
-    "vestaboard"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Love-Rox/ptpt.git",
-    "directory": "packages/ptpt-core"
   }
 }
