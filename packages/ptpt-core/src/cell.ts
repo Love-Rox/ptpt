@@ -3,6 +3,7 @@ import { normalizeFrames } from './normalize'
 import { computeFlipPath, type FlipDirection } from './path'
 import { defaultPreset } from './presets/default'
 import type { PresetDefinition } from './presets/_types'
+import { prefersReducedMotion } from './reduced-motion'
 
 /** How a cell degrades when the user prefers reduced motion. */
 export type ReducedMotion = 'instant' | 'minimal' | 'ignore'
@@ -47,6 +48,14 @@ export type Cell = {
   destroy(): void
   /** The slug currently displayed. */
   readonly current: string
+  /** The frame currently displayed. */
+  readonly currentFrame: Frame
+  /**
+   * Resolve a slug to its frame.
+   *
+   * @throws If `slug` is not in this cell's frame set.
+   */
+  frameFor(slug: string): Frame
   /** The host element passed to {@link createCell}. */
   readonly element: HTMLElement
 }
@@ -56,18 +65,6 @@ type Segment = { slug: string; waiters: Waiter[] }
 type ActiveFlip = { timers: ReturnType<typeof setTimeout>[]; settle: () => void }
 
 const isDev = typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production'
-
-function prefersReducedMotion(): boolean {
-  try {
-    return (
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    )
-  } catch {
-    return false
-  }
-}
 
 function resolveFrames(options: CellOptions): Frame[] {
   if (options.frames && options.preset) {
@@ -251,8 +248,12 @@ export function createCell(element: HTMLElement, options: CellOptions = {}): Cel
   return {
     flipTo,
     destroy,
+    frameFor: frameBySlug,
     get current() {
       return currentSlug
+    },
+    get currentFrame() {
+      return frameBySlug(currentSlug)
     },
     get element() {
       return element
