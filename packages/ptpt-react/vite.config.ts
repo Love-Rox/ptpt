@@ -8,6 +8,9 @@ export default defineConfig({
       include: ['src'],
       rollupTypes: false,
       entryRoot: 'src',
+      // Keep the workspace specifier bare in emitted .d.ts (don't inline the
+      // tsconfig `paths` source alias, which would break published types).
+      aliasesExclude: [/^@love-rox\//],
     }),
   ],
   esbuild: {

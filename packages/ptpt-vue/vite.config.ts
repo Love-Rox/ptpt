@@ -8,6 +8,8 @@ export default defineConfig({
       include: ['src'],
       rollupTypes: false,
       entryRoot: 'src',
+      // Keep the workspace specifier bare in emitted .d.ts.
+      aliasesExclude: [/^@love-rox\//],
     }),
   ],
   build: {
