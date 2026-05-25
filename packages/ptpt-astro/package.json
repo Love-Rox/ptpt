@@ -1,6 +1,6 @@
 {
   "name": "@love-rox/ptpt-astro",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Astro integration and components for ptpt split-flap displays.",
   "keywords": [
     "astro",
@@ -36,15 +36,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@love-rox/ptpt-rehype": "^0.1.0"
+    "@love-rox/ptpt-rehype": "^0.1.1"
   },
   "devDependencies": {
-    "@love-rox/ptpt-core": "^0.1.0",
-    "@love-rox/ptpt-rehype": "^0.1.0",
+    "@love-rox/ptpt-core": "^0.1.1",
+    "@love-rox/ptpt-rehype": "^0.1.1",
     "astro": "^5.15.0"
   },
   "peerDependencies": {
-    "@love-rox/ptpt-core": "^0.1.0",
+    "@love-rox/ptpt-core": "^0.1.1",
     "astro": ">=4"
   }
 }
