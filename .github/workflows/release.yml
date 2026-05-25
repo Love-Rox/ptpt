@@ -23,6 +23,14 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
 
+      # changeset publish shells out to the package manager's `publish`, which
+      # reads auth from ~/.npmrc. Write a literal-token .npmrc (env-var
+      # substitution support differs between npm and bun, so don't rely on it).
+      - name: Configure npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > "$HOME/.npmrc"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       # Opens/updates a "Version Packages" PR, or publishes when one is merged.
       # Requires an NPM_TOKEN secret with publish access to @love-rox/*.
       - name: Changesets
