@@ -36,15 +36,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@love-rox/ptpt-rehype": "workspace:*"
+    "@love-rox/ptpt-rehype": "^0.1.0"
   },
   "devDependencies": {
-    "@love-rox/ptpt-core": "workspace:*",
-    "@love-rox/ptpt-rehype": "workspace:*",
+    "@love-rox/ptpt-core": "^0.1.0",
+    "@love-rox/ptpt-rehype": "^0.1.0",
     "astro": "^5.15.0"
   },
   "peerDependencies": {
-    "@love-rox/ptpt-core": "workspace:*",
+    "@love-rox/ptpt-core": "^0.1.0",
     "astro": ">=4"
   }
 }

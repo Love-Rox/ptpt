@@ -20,15 +20,15 @@
       "name": "@love-rox/ptpt-astro",
       "version": "0.1.0",
       "dependencies": {
-        "@love-rox/ptpt-rehype": "workspace:*",
+        "@love-rox/ptpt-rehype": "^0.1.0",
       },
       "devDependencies": {
-        "@love-rox/ptpt-core": "workspace:*",
-        "@love-rox/ptpt-rehype": "workspace:*",
+        "@love-rox/ptpt-core": "^0.1.0",
+        "@love-rox/ptpt-rehype": "^0.1.0",
         "astro": "^5.15.0",
       },
       "peerDependencies": {
-        "@love-rox/ptpt-core": "workspace:*",
+        "@love-rox/ptpt-core": "^0.1.0",
         "astro": ">=4",
       },
     },
@@ -40,7 +40,7 @@
       "name": "@love-rox/ptpt-react",
       "version": "0.1.0",
       "devDependencies": {
-        "@love-rox/ptpt-core": "workspace:*",
+        "@love-rox/ptpt-core": "^0.1.0",
         "@testing-library/react": "^16.3.0",
         "@types/react": "^19.2.2",
         "@types/react-dom": "^19.2.1",
@@ -48,7 +48,7 @@
         "react-dom": "^19.2.0",
       },
       "peerDependencies": {
-        "@love-rox/ptpt-core": "workspace:*",
+        "@love-rox/ptpt-core": "^0.1.0",
         "react": ">=18",
       },
     },
@@ -60,24 +60,24 @@
         "unist-util-visit": "^5.0.0",
       },
       "devDependencies": {
-        "@love-rox/ptpt-core": "workspace:*",
+        "@love-rox/ptpt-core": "^0.1.0",
         "@types/hast": "^3.0.4",
         "rehype": "^13.0.2",
       },
       "peerDependencies": {
-        "@love-rox/ptpt-core": "workspace:*",
+        "@love-rox/ptpt-core": "^0.1.0",
       },
     },
     "packages/ptpt-vue": {
       "name": "@love-rox/ptpt-vue",
       "version": "0.1.0",
       "devDependencies": {
-        "@love-rox/ptpt-core": "workspace:*",
+        "@love-rox/ptpt-core": "^0.1.0",
         "@vue/test-utils": "^2.4.6",
         "vue": "^3.5.22",
       },
       "peerDependencies": {
-        "@love-rox/ptpt-core": "workspace:*",
+        "@love-rox/ptpt-core": "^0.1.0",
         "vue": ">=3.4",
       },
     },
