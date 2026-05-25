@@ -1,6 +1,6 @@
 {
   "name": "@love-rox/ptpt-vue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vue wrapper for ptpt, the split-flap display library.",
   "keywords": [
     "flipboard",
@@ -33,12 +33,12 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@love-rox/ptpt-core": "^0.1.0",
+    "@love-rox/ptpt-core": "^0.1.1",
     "@vue/test-utils": "^2.4.6",
     "vue": "^3.5.22"
   },
   "peerDependencies": {
-    "@love-rox/ptpt-core": "^0.1.0",
+    "@love-rox/ptpt-core": "^0.1.1",
     "vue": ">=3.4"
   }
 }

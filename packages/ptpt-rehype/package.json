@@ -1,6 +1,6 @@
 {
   "name": "@love-rox/ptpt-rehype",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "rehype plugin and client hydrator for ptpt split-flap displays in Markdown/HTML.",
   "keywords": [
     "hast",
@@ -42,11 +42,11 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@love-rox/ptpt-core": "^0.1.0",
+    "@love-rox/ptpt-core": "^0.1.1",
     "@types/hast": "^3.0.4",
     "rehype": "^13.0.2"
   },
   "peerDependencies": {
-    "@love-rox/ptpt-core": "^0.1.0"
+    "@love-rox/ptpt-core": "^0.1.1"
   }
 }
