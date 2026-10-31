@@ -60,7 +60,7 @@ export default function rehypePtpt(options: RehypePtptOptions = {}) {
 export { rehypePtpt }
 
 function hasClass(node: Element, name: string): boolean {
-  const value = node.properties?.className
+  const value: unknown = node.properties?.className
   if (Array.isArray(value)) return value.includes(name)
   if (typeof value === 'string') return value.split(/\s+/).includes(name)
   return false

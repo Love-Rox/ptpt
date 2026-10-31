@@ -36,11 +36,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@love-rox/ptpt-rehype": "^0.1.1"
+    "@love-rox/ptpt-rehype": "workspace:^"
   },
   "devDependencies": {
-    "@love-rox/ptpt-core": "^0.1.1",
-    "@love-rox/ptpt-rehype": "^0.1.1",
+    "@love-rox/ptpt-core": "workspace:^",
+    "@love-rox/ptpt-rehype": "workspace:^",
     "astro": "^5.15.0"
   },
   "peerDependencies": {
