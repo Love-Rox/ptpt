@@ -1,21 +1,18 @@
 {
   "name": "ptpt-monorepo",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "type": "module",
   "scripts": {
-    "build": "bun run --filter='./packages/*' build",
-    "test": "bun run --filter='./packages/*' test",
-    "typecheck": "bun run --filter='./packages/*' typecheck",
+    "build": "pnpm -r --filter \"./packages/*\" run build",
+    "test": "pnpm -r --filter \"./packages/*\" run test",
+    "typecheck": "pnpm -r --filter \"./packages/*\" run typecheck",
     "lint": "vp lint",
     "format": "vp fmt",
     "format:check": "vp fmt --check",
     "check": "vp check",
     "changeset": "changeset",
-    "version": "changeset version",
-    "release": "bun run build && changeset publish"
+    "ci:version": "changeset version",
+    "ci:publish": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
@@ -27,5 +24,6 @@
     "vite-plugin-dts": "^4.5.4",
     "vite-plus": "0.1.22",
     "vitest": "^4.0.18"
-  }
+  },
+  "packageManager": "pnpm@10.33.0"
 }

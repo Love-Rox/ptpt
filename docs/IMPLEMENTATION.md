@@ -140,7 +140,7 @@ ptpt/
 ├── .gitignore
 ├── .npmignore
 ├── biome.json               # Linter/Formatter(Biome 推奨、ESLint+Prettier より高速)
-├── bun.lock                 # Bun v1.2 以降はテキストベース(JSONC)
+├── pnpm-lock.yaml           # pnpm のロックファイル
 ├── LICENSE
 ├── package.json             # ルート(workspaces 定義)
 ├── README.md                # トップREADME(日英)
